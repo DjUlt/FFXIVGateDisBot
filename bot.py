@@ -65,7 +65,7 @@ async def startTimer(ctx):
 
 async def endTimer(ctx):
     global startChannels
-    if not ctx.channel in startChannels.contains:
+    if not ctx.channel in startChannels:
         await ctx.response.send_message("Already stopped")
         return
     channel = ctx.channel
@@ -126,13 +126,16 @@ async def sendStartBeforeAll():
     else:
         await sendEndingIn(startChannels)
 
+async def sendStatusClearAll():
+    if isGateRunning():
+        await sendStartClear(startChannels)
+    else:
+        await sendEndClear(startChannels)
+
 
 @tasks.loop(minutes=10)
 async def checkTimer():
-    if isGateRunning():
-        await sendStartingIn(startChannels)
-    else:
-        await sendEndingIn(startChannels)
+    await endStatusClearAll()
 
 
 def currentMinute() -> int:
@@ -148,7 +151,7 @@ def toNextGateEventMin() -> int:
 def nextTenMinStrippedToHour() -> datetime:
     now = datetime.now()
     neededDateTime = now + timedelta(minutes=toNextGateEventMin())
-    return datetime(year=neededDateTime.year, month=neededDateTime.month, day=neededDateTime.day, hour=neededDateTime.hour, minute=neededDateTime.minute)
+    return datetime(year=neededDateTime.year, month=neededDateTime.month, day=neededDateTime.day, hour=neededDateTime.hour, minute=neededDateTime.minute, second=1)
 
 def toTextMin() -> int:
     return (nextTenMinStrippedToHour() - datetime.now()).seconds
