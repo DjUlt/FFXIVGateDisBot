@@ -137,7 +137,7 @@ async def sendStatusClearAll():
 
 @tasks.loop(minutes=10)
 async def checkTimer():
-    await endStatusClearAll()
+    await sendStatusClearAll()
 
 
 def currentMinute() -> int:
