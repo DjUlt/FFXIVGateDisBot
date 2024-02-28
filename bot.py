@@ -56,6 +56,7 @@ async def startTimer(ctx):
     if ctx.channel in startChannels:
         await ctx.response.send_message("Already started")
         return
+    print('Started timer!')
     channel = ctx.channel
     startChannels.append(channel)
     await ctx.response.send_message("Release the kraken!")
@@ -68,6 +69,7 @@ async def endTimer(ctx):
     if not ctx.channel in startChannels:
         await ctx.response.send_message("Already stopped")
         return
+    print('Stopped timer!')
     channel = ctx.channel
     startChannels.remove(channel)
     await ctx.response.send_message("Flood gates are closed")
